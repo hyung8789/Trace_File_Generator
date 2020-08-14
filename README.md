@@ -13,14 +13,14 @@
 <br>
 
 <strong> < Example of a generated trace file > </strong>
-1) RAND_MODE 0 with OVERWRITE_COUNT 0<br>
+1) RAND_MODE 0 with OVERWRITE_COUNT 0<br></br>
 W 0<br>
 W	1<br>
 W	2<br>
 W	3<br>
 W	4<br></br>
 
-2) RAND_MODE 1 with OVERWRITE_COUNT 1<br>
+2) RAND_MODE 1 with OVERWRITE_COUNT 1<br></br>
 W 1<br>
 W	0<br>
 W	4<br>
