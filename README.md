@@ -7,7 +7,7 @@
 - Modify this predefined macro as you want
 
 | Macro | For What |
-|:---:|:---|
+|:---:|:---:|
 | RAND_MODE | Generate trace file with random sequence (0 : Not Use, 1 : Use) |
 | OVERWRITE_COUNT | Create the same write operation as the current OVERWRITE_COUNT macro for each PSN (Default : 0) |
 <br>
