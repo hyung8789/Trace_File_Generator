@@ -18,7 +18,8 @@ W 0<br>
 W	1<br>
 W	2<br>
 W	3<br>
-W	4<br>
+W	4<br></br>
+
 2) RAND_MODE 1 with OVERWRITE_COUNT 1<br>
 W 1<br>
 W	0<br>
