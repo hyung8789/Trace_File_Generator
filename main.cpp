@@ -3,23 +3,23 @@
 #include <windows.h>
 #include <time.h>
 
-#define RAND_MODE 0 //trace ¼ø¼­¸¦ ¼¯´Â´Ù
-#define OVERWRITE_COUNT 0 //Overwrite È½¼ö : ¸ğµç ¼½ÅÍ(ÆäÀÌÁö)¿¡ ´ëÇØ °¢°¢ÀÇ À§Ä¡¿¡ ´ëÇÑ Overwrite È½¼ö¸¸Å­ »ı¼º
+#define RAND_MODE 0 //trace ìˆœì„œë¥¼ ì„ëŠ”ë‹¤
+#define OVERWRITE_COUNT 0 //Overwrite íšŸìˆ˜ : ëª¨ë“  ì„¹í„°(í˜ì´ì§€)ì— ëŒ€í•´ ê°ê°ì˜ ìœ„ì¹˜ì— ëŒ€í•œ Overwrite íšŸìˆ˜ë§Œí¼ ìƒì„±
 
-#define MB_PER_BLOCK 64 //1MB´ç 64 ºí·Ï
-#define MB_PER_SECTOR 2048 //1MB´ç 2048¼½ÅÍ
-#define BLOCK_PER_SECTOR 32 //ÇÑ ºí·Ï¿¡ ÇØ´çÇÏ´Â ¼½ÅÍÀÇ °³¼ö
+#define MB_PER_BLOCK 64 //1MBë‹¹ 64 ë¸”ë¡
+#define MB_PER_SECTOR 2048 //1MBë‹¹ 2048ì„¹í„°
+#define BLOCK_PER_SECTOR 32 //í•œ ë¸”ë¡ì— í•´ë‹¹í•˜ëŠ” ì„¹í„°ì˜ ê°œìˆ˜
 
-unsigned int size = 0; //»ı¼º ÇÒ °³¼ö
+unsigned int size = 0; //ìƒì„± í•  ê°œìˆ˜
 unsigned short mb = 0;
 unsigned int block_size = 0;
 unsigned int sector_size = 0;
-bool* written_chk_array = NULL; //Áßº¹ °Ë»ç
+bool* written_chk_array = NULL; //ì¤‘ë³µ ê²€ì‚¬
 
 void main()
 {
 	int select = 0;
-	printf("0 : MB´ÜÀ§¿¡ ÇØ´çÇÏ´Â ÀüÃ¼ ¼½ÅÍ(ÆäÀÌÁö)°³¼ö¸¸Å­ »ı¼º\n1 : ÀÏÁ¤ °³¼ö ¸¸Å­ »ı¼º\n>>");
+	printf("0 : MBë‹¨ìœ„ì— í•´ë‹¹í•˜ëŠ” ì „ì²´ ì„¹í„°(í˜ì´ì§€)ê°œìˆ˜ë§Œí¼ ìƒì„±\n1 : ì¼ì • ê°œìˆ˜ ë§Œí¼ ìƒì„±\n>>");
 	scanf("%d", &select);
 
 	switch (select)
@@ -34,17 +34,17 @@ void main()
 	}
 
 MB_PAGE_SIZE_GEN:
-	printf("MB ´ÜÀ§ ÀÔ·Â (ÃÖ´ë 65472MB) : ");
+	printf("MB ë‹¨ìœ„ ì…ë ¥ (ìµœëŒ€ 65472MB) : ");
 	scanf("%hd", &mb);
 
-	block_size = mb * MB_PER_BLOCK; //ÇÒ´çµÈ ¸Ş¸ğ¸® Å©±â¿¡ ÇØ´çÇÏ´Â ÀüÃ¼ ºí·ÏÀÇ °³¼ö (Spare Block Æ÷ÇÔ)
-	sector_size = block_size * BLOCK_PER_SECTOR; //ÇÒ´çµÈ ¸Ş¸ğ¸® Å©±â¿¡ ÇØ´çÇÏ´Â ÀüÃ¼ ¼½ÅÍÀÇ °³¼ö (Spare Block Æ÷ÇÔ)
+	block_size = mb * MB_PER_BLOCK; //í• ë‹¹ëœ ë©”ëª¨ë¦¬ í¬ê¸°ì— í•´ë‹¹í•˜ëŠ” ì „ì²´ ë¸”ë¡ì˜ ê°œìˆ˜ (Spare Block í¬í•¨)
+	sector_size = block_size * BLOCK_PER_SECTOR; //í• ë‹¹ëœ ë©”ëª¨ë¦¬ í¬ê¸°ì— í•´ë‹¹í•˜ëŠ” ì „ì²´ ì„¹í„°ì˜ ê°œìˆ˜ (Spare Block í¬í•¨)
 	size = sector_size;
 
 	goto WRITE_TO_FILE;
 
 SPECIFIC_SIZE_GEN:
-	printf("»ı¼ºÇÒ °³¼ö : ");
+	printf("ìƒì„±í•  ê°œìˆ˜ : ");
 	scanf("%u", &size);
 
 	goto WRITE_TO_FILE;
@@ -54,11 +54,11 @@ WRITE_TO_FILE:
 
 	switch (RAND_MODE)
 	{
-	case 0: //¼ø¼­´ë·Î ±â·Ï
+	case 0: //ìˆœì„œëŒ€ë¡œ ê¸°ë¡
 		if (OVERWRITE_COUNT > 0)
 		{
-			int overwrite_counter = 0; //ÇöÀç OverwriteÈ½¼ö Ä«¿îÅÍ
-			while (1) //Overwrite È½¼ö¸¸Å­ ¹İº¹
+			int overwrite_counter = 0; //í˜„ì¬ OverwriteíšŸìˆ˜ ì¹´ìš´í„°
+			while (1) //Overwrite íšŸìˆ˜ë§Œí¼ ë°˜ë³µ
 			{
 				for (unsigned int i = 0; i < size; i++)
 					fprintf(fp, "W\t%u\n", i);
@@ -76,11 +76,11 @@ WRITE_TO_FILE:
 
 		break;
 
-	case 1: //·£´ıÇÑ ¼ø¼­·Î ±â·Ï
+	case 1: //ëœë¤í•œ ìˆœì„œë¡œ ê¸°ë¡
 		if (OVERWRITE_COUNT > 0)
 		{
-			int overwrite_counter = 0; //ÇöÀç OverwriteÈ½¼ö Ä«¿îÅÍ
-			while (1) //Overwrite È½¼ö¸¸Å­ ¹İº¹
+			int overwrite_counter = 0; //í˜„ì¬ OverwriteíšŸìˆ˜ ì¹´ìš´í„°
+			while (1) //Overwrite íšŸìˆ˜ë§Œí¼ ë°˜ë³µ
 			{
 				srand((unsigned)time(NULL));
 				if (written_chk_array != NULL)
@@ -89,24 +89,24 @@ WRITE_TO_FILE:
 					written_chk_array = NULL;
 				}
 				written_chk_array = new bool[size];
-				unsigned int write_counter = 0; //Ãâ·Â Ä«¿îÆ®¸¦ ÅëÇØ size¸¸Å­ Ãâ·Â µÇ¾ú´ÂÁö È®ÀÎ
+				unsigned int write_counter = 0; //ì¶œë ¥ ì¹´ìš´íŠ¸ë¥¼ í†µí•´ sizeë§Œí¼ ì¶œë ¥ ë˜ì—ˆëŠ”ì§€ í™•ì¸
 
-				for (unsigned int i = 0; i < size; i++) //ÃÊ±âÈ­
+				for (unsigned int i = 0; i < size; i++) //ì´ˆê¸°í™”
 				{
-					written_chk_array[i] = false; //¾ÆÁ÷ ±â·ÏµÇÁö ¾ÊÀ½
+					written_chk_array[i] = false; //ì•„ì§ ê¸°ë¡ë˜ì§€ ì•ŠìŒ
 				}
 
 				while (1)
 				{
-					unsigned int rand_num = rand() % size; //0 ~ size ¹üÀ§
-					if (written_chk_array[rand_num] == false) //±â·ÏµÇÁö ¾Ê¾ÒÀ¸¸é
+					unsigned int rand_num = rand() % size; //0 ~ size ë²”ìœ„
+					if (written_chk_array[rand_num] == false) //ê¸°ë¡ë˜ì§€ ì•Šì•˜ìœ¼ë©´
 					{
 						written_chk_array[rand_num] = true;
 						fprintf(fp, "W\t%u\n", rand_num);
 						write_counter++;
 					}
 
-					if (write_counter == size) //±â·ÏÀŸ ¸¸Å­ ¼öÇàµÇ¾úÀ¸¸é Á¾·á
+					if (write_counter == size) //ê¸°ë¡ÂŸ ë§Œí¼ ìˆ˜í–‰ë˜ì—ˆìœ¼ë©´ ì¢…ë£Œ
 						break;
 				}
 				overwrite_counter++;
@@ -123,24 +123,24 @@ WRITE_TO_FILE:
 				written_chk_array = NULL;
 			}
 			written_chk_array = new bool[size];
-			unsigned int write_counter = 0; //Ãâ·Â Ä«¿îÆ®¸¦ ÅëÇØ size¸¸Å­ Ãâ·Â µÇ¾ú´ÂÁö È®ÀÎ
+			unsigned int write_counter = 0; //ì¶œë ¥ ì¹´ìš´íŠ¸ë¥¼ í†µí•´ sizeë§Œí¼ ì¶œë ¥ ë˜ì—ˆëŠ”ì§€ í™•ì¸
 
-			for (unsigned int i = 0; i < size; i++) //ÃÊ±âÈ­
+			for (unsigned int i = 0; i < size; i++) //ì´ˆê¸°í™”
 			{
-				written_chk_array[i] = false; //¾ÆÁ÷ ±â·ÏµÇÁö ¾ÊÀ½
+				written_chk_array[i] = false; //ì•„ì§ ê¸°ë¡ë˜ì§€ ì•ŠìŒ
 			}
 
 			while (1)
 			{
-				unsigned int rand_num = rand() % size; //0 ~ size ¹üÀ§
-				if (written_chk_array[rand_num] == false) //±â·ÏµÇÁö ¾Ê¾ÒÀ¸¸é
+				unsigned int rand_num = rand() % size; //0 ~ size ë²”ìœ„
+				if (written_chk_array[rand_num] == false) //ê¸°ë¡ë˜ì§€ ì•Šì•˜ìœ¼ë©´
 				{
 					written_chk_array[rand_num] = true;
 					fprintf(fp, "W\t%u\n", rand_num);
 					write_counter++;
 				}
 
-				if (write_counter == size) //±â·ÏÀŸ ¸¸Å­ ¼öÇàµÇ¾úÀ¸¸é Á¾·á
+				if (write_counter == size) //ê¸°ë¡í•  ê°œìˆ˜ë§Œí¼ ìˆ˜í–‰ë˜ì—ˆìœ¼ë©´ ì¢…ë£Œ
 					break;
 			}
 		}
@@ -149,9 +149,9 @@ WRITE_TO_FILE:
 	}
 	
 	if(OVERWRITE_COUNT ==  0)
-		printf("trace.txt >> %u °³¼ö¸¸Å­ »ı¼ºµÊ\n", size);
+		printf("trace.txt >> %u ê°œìˆ˜ë§Œí¼ ìƒì„±ë¨\n", size);
 	else
-		printf("trace.txt >> %u °³¼ö¸¸Å­ »ı¼ºµÊ\n", size * (OVERWRITE_COUNT + 1));
+		printf("trace.txt >> %u ê°œìˆ˜ë§Œí¼ ìƒì„±ë¨\n", size * (OVERWRITE_COUNT + 1));
 
 	system("pause");
 	exit(1);
