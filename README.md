@@ -2,7 +2,7 @@
 <strong>Generate Trace File with format : W [TAB] PSN</strong>
 <br></br>
 
-<strong>< Build Option ></strong>
+<h3><strong>< Build Option ></strong></h3>
 <br>
 - Modify this predefined macro as you want
 
@@ -12,7 +12,7 @@
 | OVERWRITE_COUNT | Create the same write operation as the current OVERWRITE_COUNT macro for each PSN (Default : 0) |
 <br>
 
-<strong> < Example of a generated trace file > </strong>
+<h3><strong> < Example of a generated trace file > </strong></h3>
 1) RAND_MODE 0 with OVERWRITE_COUNT 0<br></br>
 W 0<br>
 W	1<br>
