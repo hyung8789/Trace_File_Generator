@@ -1,5 +1,5 @@
 # Trace_File_Generator
-<strong>Generate Trace File with format : W [TAB] PSN</strong>
+<strong>Generate Trace File with format : W [TAB] LSN</strong>
 <br></br>
 
 <strong>< Build Option ></strong>
@@ -9,7 +9,7 @@
 | Predefined Macro | For What |
 |:---:|:---:|
 | RAND_MODE | Generate trace file with random sequence (0 : Not Use, 1 : Use) |
-| OVERWRITE_COUNT | Create the same write operation as the current OVERWRITE_COUNT macro for each PSN (Default : 0) |
+| OVERWRITE_COUNT | Create the same write operation as the current OVERWRITE_COUNT macro for each LSN (Default : 0) |
 <br>
 
 <strong> < Example of a generated trace file > </strong>
