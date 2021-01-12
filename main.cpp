@@ -17,12 +17,18 @@ unsigned int size = 0; //생성 할 개수
 unsigned short mb = 0;
 unsigned int block_size = 0;
 unsigned int sector_size = 0;
+float mb_gen_ratio = 0;
 bool* written_chk_array = NULL; //중복 검사
 
 void main()
 {
 	int select = 0;
-	printf("0 : MB단위에 해당하는 전체 섹터(페이지)개수만큼 생성\n1 : 일정 개수 만큼 생성\n2 : MB단위에 해당하는 전체 섹터(페이지)개수 - Spare Block이 차지하는 섹터(페이지) 개수만큼 생성\n>>");
+	printf("0 : MB단위에 해당하는 전체 섹터(페이지)개수만큼 생성\n");
+	printf("1 : 일정 개수 만큼 생성\n");
+	printf("2 : MB단위에 해당하는 전체 섹터(페이지)개수 - Spare Block이 차지하는 섹터(페이지) 개수만큼 생성\n");
+	printf("3 : MB단위에 해당하는 전체 섹터(페이지)개수 - Spare Block이 차지하는 섹터(페이지) 개수에 전체에 대한 일정 비율 만큼 채우기 위해 생성\n");
+	
+	printf(">>");
 	scanf("%d", &select);
 
 	switch (select)
@@ -35,6 +41,9 @@ void main()
 
 	case 2:
 		goto MB_PAGE_SIZE_NOT_INC_SPARE_GEN;
+
+	case 3:
+		goto MB_PAGE_SIZE_RATIO_NOT_INC_SPARE_GEN;
 	}
 
 MB_PAGE_SIZE_GEN:
@@ -60,6 +69,27 @@ MB_PAGE_SIZE_NOT_INC_SPARE_GEN:
 	block_size = (mb * MB_PER_BLOCK) - (unsigned int)round((mb * MB_PER_BLOCK) * SPARE_BLOCK_RATIO); //할당된 메모리 크기에 해당하는 Spare Block을 제외한 전체 블록의 개수
 	sector_size = block_size * BLOCK_PER_SECTOR; //할당된 메모리 크기에 해당하는 전체 섹터의 개수
 	size = sector_size;
+
+	goto WRITE_TO_FILE;
+
+MB_PAGE_SIZE_RATIO_NOT_INC_SPARE_GEN:
+	printf("MB 단위 입력 (최대 65472MB) : ");
+	scanf("%hd", &mb);
+
+	while (1)
+	{
+		printf("MB 용량에 대한 생성하고자 하는 비율 설정 (0.0 초과 ~ 1.0 이하) : ");
+		scanf("%f", &mb_gen_ratio);
+
+		if (mb_gen_ratio > 0 && mb_gen_ratio <= 1.0)
+			break;
+
+		mb_gen_ratio = 0;
+	}
+
+	block_size = (mb * MB_PER_BLOCK) - (unsigned int)round((mb * MB_PER_BLOCK) * SPARE_BLOCK_RATIO); //할당된 메모리 크기에 해당하는 Spare Block을 제외한 전체 블록의 개수
+	sector_size = block_size * BLOCK_PER_SECTOR; //할당된 메모리 크기에 해당하는 전체 섹터의 개수
+	size = sector_size * mb_gen_ratio;
 
 	goto WRITE_TO_FILE;
 
