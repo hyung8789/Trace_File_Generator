@@ -5,11 +5,13 @@
 <strong>< Build Option ></strong>
 <br>
 - Modify this predefined macro as you want
+- When generating trace file, it can be except for the capacity allocated to the Spare Block (according to SPARAE_BLOCK_RATIO).
 
 | Predefined Macro | For What |
 |:---:|:---:|
 | RAND_MODE | Generate trace file with random sequence (0 : Not Use, 1 : Use) |
 | OVERWRITE_COUNT | Create the same write operation as the current OVERWRITE_COUNT macro for each LSN (Default : 0) |
+| SPARE_BLOCK_RATIO | The rate of spare blocks to be managed by the system for the total number of blocks (Blocks that cannot be record data directly) (Default : 0.08, 8%) |
 <br>
 
 <strong> < Example of a generated trace file > </strong>
