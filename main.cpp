@@ -1,7 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <windows.h>
 #include <time.h>
+#include <math.h>
+#include <iostream>
 
 #define RAND_MODE 0 //trace 순서를 섞는다
 #define OVERWRITE_COUNT 0 //Overwrite 횟수 : 모든 섹터(페이지)에 대해 각각의 위치에 대한 Overwrite 횟수만큼 생성
@@ -9,6 +11,7 @@
 #define MB_PER_BLOCK 64 //1MB당 64 블록
 #define MB_PER_SECTOR 2048 //1MB당 2048섹터
 #define BLOCK_PER_SECTOR 32 //한 블록에 해당하는 섹터의 개수
+#define SPARE_BLOCK_RATIO 0.08 //전체 블록 개수에 대한 시스템에서 관리할 Spare Block 비율 (기본 값 8%)
 
 unsigned int size = 0; //생성 할 개수
 unsigned short mb = 0;
@@ -19,26 +22,27 @@ bool* written_chk_array = NULL; //중복 검사
 void main()
 {
 	int select = 0;
-	printf("0 : MB단위에 해당하는 전체 섹터(페이지)개수만큼 생성\n1 : 일정 개수 만큼 생성\n>>");
+	printf("0 : MB단위에 해당하는 전체 섹터(페이지)개수만큼 생성\n1 : 일정 개수 만큼 생성\n2 : MB단위에 해당하는 전체 섹터(페이지)개수 - Spare Block이 차지하는 섹터(페이지) 개수만큼 생성\n>>");
 	scanf("%d", &select);
 
 	switch (select)
 	{
 	case 0:
 		goto MB_PAGE_SIZE_GEN;
-		break;
 
 	case 1:
 		goto SPECIFIC_SIZE_GEN;
-		break;
+
+	case 2:
+		goto MB_PAGE_SIZE_NOT_INC_SPARE_GEN;
 	}
 
 MB_PAGE_SIZE_GEN:
 	printf("MB 단위 입력 (최대 65472MB) : ");
 	scanf("%hd", &mb);
 
-	block_size = mb * MB_PER_BLOCK; //할당된 메모리 크기에 해당하는 전체 블록의 개수 (Spare Block 포함)
-	sector_size = block_size * BLOCK_PER_SECTOR; //할당된 메모리 크기에 해당하는 전체 섹터의 개수 (Spare Block 포함)
+	block_size = mb * MB_PER_BLOCK; //할당된 메모리 크기에 해당하는 전체 블록의 개수
+	sector_size = block_size * BLOCK_PER_SECTOR; //할당된 메모리 크기에 해당하는 전체 섹터의 개수
 	size = sector_size;
 
 	goto WRITE_TO_FILE;
@@ -49,8 +53,25 @@ SPECIFIC_SIZE_GEN:
 
 	goto WRITE_TO_FILE;
 
+MB_PAGE_SIZE_NOT_INC_SPARE_GEN:
+	printf("MB 단위 입력 (최대 65472MB) : ");
+	scanf("%hd", &mb);
+
+	block_size = (mb * MB_PER_BLOCK) - (unsigned int)round((mb * MB_PER_BLOCK) * SPARE_BLOCK_RATIO); //할당된 메모리 크기에 해당하는 Spare Block을 제외한 전체 블록의 개수
+	sector_size = block_size * BLOCK_PER_SECTOR; //할당된 메모리 크기에 해당하는 전체 섹터의 개수
+	size = sector_size;
+
+	goto WRITE_TO_FILE;
+
 WRITE_TO_FILE:
-	FILE* fp = fopen("trace.txt", "wt");
+	char file_name[FILENAME_MAX];
+	FILE* fp = NULL;
+
+	std::cout << "출력 trace 파일 이름 지정 (이름.확장자) >>";
+	//gets_s(file_name, FILENAME_MAX);
+	std::cin >> file_name;
+
+	fp = fopen(file_name, "wt");
 
 	switch (RAND_MODE)
 	{
@@ -106,7 +127,7 @@ WRITE_TO_FILE:
 						write_counter++;
 					}
 
-					if (write_counter == size) //기록 만큼 수행되었으면 종료
+					if (write_counter == size) //기록횟수 만큼 수행되었으면 종료
 						break;
 				}
 				overwrite_counter++;
